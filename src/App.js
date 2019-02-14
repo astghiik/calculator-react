@@ -1,28 +1,65 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import 'bootstrap/dist/css/bootstrap.css';
+import Brain from './components/Brain';
+import Display from './components/Display';
 
 class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
-  }
-}
+    constructor(props) {
+        super(props);
+        this.state = {
+            display: ''
+        };
+    }
 
+    handleDisplayAdd = char => {
+        let { display } = this.state;
+        if (+char === Math.PI) char = 'π';
+        if (+char === Math.E) char = 'e';
+        display += char;
+        this.setState({ display });
+    };
+
+    handleDisplayRemove = () => {
+        let { display } = this.state;
+        display = display.slice(0, -1);
+        this.setState({ display });
+    }
+
+    calculate = (operand1, operator, operand2) => {
+        let result;
+        switch (operator) {
+            case '÷':
+            result = operand1 / operand2;
+            break;
+
+            case '×':
+            result = operand1 * operand2;
+            break;
+
+            case '-':
+            result = operand1 - operand2;
+            break;
+
+            case '+':
+            result = +operand1 + +operand2;
+            break;
+        }
+        
+        this.setState({ display: result });
+        return result;
+    };
+
+    render() { 
+        return ( 
+            <div className='carcase'>
+                <table className="table table-bordered table-dark">
+                  <Display display={this.state.display} />
+                  <Brain addToDisplay={this.handleDisplayAdd} removeFromDisplay={this.handleDisplayRemove} calculate={this.calculate}/>
+                </table>
+            </div>
+         );
+    }
+}
+ 
 export default App;
